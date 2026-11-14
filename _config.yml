@@ -1,2 +1,4 @@
 title: ""
 description: "Privacy Policy for urAnime"
+include:
+  - ".well-known"
