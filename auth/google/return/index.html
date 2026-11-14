@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b0d12">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Return to urAnime</title>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #0b0d12; color: #f5f6fa; }
+    * { box-sizing: border-box; }
+    body { min-height: 100vh; margin: 0; display: grid; place-items: center; padding: 24px 16px; background: #0b0d12; }
+    main { width: min(100%, 420px); padding: 30px 24px; border: 1px solid #252c3a; border-radius: 22px; background: #151923; text-align: center; }
+    h1 { margin: 0 0 12px; font-size: 25px; }
+    p { color: #a6afc0; font-size: 14px; line-height: 1.6; }
+    a { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; margin-top: 16px; padding: 0 22px; border-radius: 11px; background: #8b5cf6; color: #fff; font-size: 14px; font-weight: 750; text-decoration: none; }
+    .small { margin-top: 22px; color: #737d90; font-size: 11px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Return to urAnime</h1>
+    <p>Your Google account has been selected. Return to the urAnime app to finish creating your secure Supabase session.</p>
+    <a id="open-app" href="/">Open urAnime</a>
+    <p class="small">If urAnime is installed, Android should open it automatically. Otherwise, install urAnime and start sign-in again.</p>
+  </main>
+  <script>
+    (() => {
+      'use strict';
+      // Preserve the one-time Google credential only as an in-memory link
+      // target. The URL fragment is never sent to GitHub Pages in an HTTP
+      // request, and the visible address/history entry is scrubbed immediately.
+      const openApp = document.getElementById('open-app');
+      const callbackUrl = new URL(window.location.href);
+      const params = new URLSearchParams(callbackUrl.hash.replace(/^#/, ''));
+      const credential = params.get('credential') || '';
+      const state = params.get('state') || '';
+      if (credential.length < 100 || credential.length > 20000 || credential.split('.').length !== 3 || !/^[a-f0-9]{64}$/i.test(state)) {
+        openApp.hidden = true;
+        document.querySelector('main > p').textContent = 'The sign-in response is missing or invalid. Return to urAnime and start again.';
+        return;
+      }
+      openApp.href = callbackUrl.toString();
+      callbackUrl.hash = '';
+      window.history.replaceState(null, '', callbackUrl.pathname + callbackUrl.search);
+    })();
+  </script>
+</body>
+</html>
