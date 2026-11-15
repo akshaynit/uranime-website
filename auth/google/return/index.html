@@ -16,32 +16,49 @@
     p { color: #a6afc0; font-size: 14px; line-height: 1.6; }
     a { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; margin-top: 16px; padding: 0 22px; border-radius: 11px; background: #8b5cf6; color: #fff; font-size: 14px; font-weight: 750; text-decoration: none; }
     .small { margin-top: 22px; color: #737d90; font-size: 11px; }
+    .error { color: #ffb8c0; }
   </style>
 </head>
 <body>
   <main>
     <h1>Return to urAnime</h1>
-    <p>Your Google account has been selected. Return to the urAnime app to finish creating your secure Supabase session.</p>
-    <a id="open-app" href="/">Open urAnime</a>
-    <p class="small">If urAnime is installed, Android should open it automatically. Otherwise, install urAnime and start sign-in again.</p>
+    <p id="message">Your Google sign-in is ready. Open urAnime to finish signing in.</p>
+    <a id="open-app" href="#">Open urAnime</a>
+    <p class="small">If urAnime is not installed, you can install it from Google Play.</p>
   </main>
   <script>
     (() => {
       'use strict';
-      // Preserve the one-time Google credential only as an in-memory link
-      // target. The URL fragment is never sent to GitHub Pages in an HTTP
-      // request, and the visible address/history entry is scrubbed immediately.
       const openApp = document.getElementById('open-app');
+      const message = document.getElementById('message');
       const callbackUrl = new URL(window.location.href);
       const params = new URLSearchParams(callbackUrl.hash.replace(/^#/, ''));
       const credential = params.get('credential') || '';
       const state = params.get('state') || '';
-      if (credential.length < 100 || credential.length > 20000 || credential.split('.').length !== 3 || !/^[a-f0-9]{64}$/i.test(state)) {
+
+      if (
+        credential.length < 100 ||
+        credential.length > 20000 ||
+        credential.split('.').length !== 3 ||
+        !/^[a-f0-9]{64}$/i.test(state)
+      ) {
         openApp.hidden = true;
-        document.querySelector('main > p').textContent = 'The sign-in response is missing or invalid. Return to urAnime and start again.';
+        message.classList.add('error');
+        message.textContent = 'The sign-in response is missing or invalid. Return to urAnime and try again.';
         return;
       }
-      openApp.href = callbackUrl.toString();
+
+      // Use a Chrome Intent URL pinned to urAnime's Android package. The
+      // credential is delivered as Android intent data, not as an HTTP request
+      // to GitHub Pages. State is checked again inside the installed app.
+      const query = new URLSearchParams({ credential, state }).toString();
+      const fallbackUrl = 'https://play.google.com/store/apps/details?id=app.uranime.mobile';
+      openApp.href =
+        `intent://auth/google/return?${query}` +
+        `#Intent;scheme=uranime;package=app.uranime.mobile;` +
+        `S.browser_fallback_url=${encodeURIComponent(fallbackUrl)};end`;
+
+      // Remove the credential from the visible HTTPS URL and browser history.
       callbackUrl.hash = '';
       window.history.replaceState(null, '', callbackUrl.pathname + callbackUrl.search);
     })();
