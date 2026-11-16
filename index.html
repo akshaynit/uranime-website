@@ -1,11 +1,202 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-  <title>uranime</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#100d1d">
+  <meta name="description" content="urAnime is your personal anime companion. Discover anime, track what you're watching, keep your anime journal private, and share with friends on your terms.">
+  <title>urAnime — Your anime life, your circle</title>
+  <style>
+    :root{
+      --bg:#100d1d; --panel:#19142a; --panel2:#211a36; --ink:#fbfaff;
+      --muted:#b9b1cb; --purple:#8b5cf6; --purple2:#a78bfa;
+      --pink:#f0abfc; --line:rgba(255,255,255,.11); --mint:#9de7cf;
+      --radius:24px; --shadow:0 24px 80px rgba(0,0,0,.32);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:
+      radial-gradient(ellipse at 82% 5%,rgba(139,92,246,.20),transparent 35%),
+      radial-gradient(ellipse at 4% 38%,rgba(240,171,252,.09),transparent 32%),var(--bg);
+      color:var(--ink);font:16px/1.6 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+    a{color:inherit;text-decoration:none}
+    .wrap{width:min(1160px,calc(100% - 40px));margin:auto}
+    .nav{height:82px;display:flex;align-items:center;justify-content:space-between}
+    .brand{display:flex;align-items:center;gap:11px;font-size:1.25rem;font-weight:850;letter-spacing:-.04em}
+    .mark{width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,var(--purple),#c084fc);display:grid;place-items:center;box-shadow:0 8px 24px #8b5cf655;font-size:20px}
+    .navlinks{display:flex;gap:30px;color:var(--muted);font-size:.92rem}
+    .navlinks a:hover{color:white}
+    .pillbtn{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:12px 19px;border-radius:999px;background:var(--purple);color:white;font-weight:750;box-shadow:0 10px 30px #8b5cf644;transition:.2s}
+    .pillbtn:hover{transform:translateY(-2px);background:#9a70fb}
+    .ghost{background:rgba(255,255,255,.06);border:1px solid var(--line);box-shadow:none}
+    .hero{padding:78px 0 76px;display:grid;grid-template-columns:1.04fr .96fr;gap:54px;align-items:center}
+    .eyebrow{display:inline-flex;gap:9px;align-items:center;padding:7px 12px;border:1px solid #a78bfa55;background:#8b5cf61b;color:#d8c9ff;border-radius:999px;font-size:.78rem;font-weight:750;letter-spacing:.06em;text-transform:uppercase}
+    .dot{width:7px;height:7px;background:var(--mint);border-radius:50%;box-shadow:0 0 12px var(--mint)}
+    h1{font-size:clamp(3.1rem,6.5vw,5.8rem);line-height:.99;letter-spacing:-.075em;margin:23px 0}
+    h1 span{background:linear-gradient(100deg,#c4b5fd 5%,#f0abfc 55%,#fbcfe8);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .lead{font-size:1.15rem;color:var(--muted);max-width:590px;line-height:1.75}
+    .actions{display:flex;gap:13px;flex-wrap:wrap;margin:30px 0 22px}
+    .smallnote{color:#938aa8;font-size:.82rem}
+    .visual{position:relative;min-height:490px;display:grid;place-items:center}
+    .glow{position:absolute;width:370px;height:370px;border-radius:50%;background:#8b5cf633;filter:blur(55px)}
+    .phone{position:relative;width:min(310px,80%);padding:13px;border:1px solid #ffffff26;border-radius:36px;background:linear-gradient(145deg,#30264a,#171225);box-shadow:var(--shadow);transform:rotate(3deg)}
+    .screen{border-radius:26px;background:#110e1d;padding:19px;min-height:430px;overflow:hidden}
+    .screenhead{display:flex;justify-content:space-between;align-items:center;font-weight:800}
+    .avatar{width:29px;height:29px;border-radius:50%;background:linear-gradient(135deg,#f0abfc,#8b5cf6);display:grid;place-items:center}
+    .mini-label{font-size:.68rem;color:#a99fbd;text-transform:uppercase;letter-spacing:.1em;margin:22px 0 9px}
+    .animecard{height:142px;border-radius:17px;padding:15px;display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(135deg,#4c287c,#a44f8b 58%,#f3a8bc);position:relative;overflow:hidden}
+    .animecard:before{content:"✦";position:absolute;right:18px;top:3px;font-size:82px;color:#ffffff45}
+    .animecard strong{font-size:1.15rem;position:relative}
+    .animecard small{position:relative;color:#fffD}
+    .statrow{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}
+    .stat{background:#211a34;border:1px solid var(--line);border-radius:14px;padding:12px}
+    .stat b{display:block;font-size:1.25rem}.stat span{font-size:.72rem;color:var(--muted)}
+    .privacy-float{position:absolute;right:-5px;bottom:55px;width:215px;padding:17px;border-radius:18px;background:#241d39;border:1px solid #ffffff25;box-shadow:var(--shadow);transform:rotate(-4deg)}
+    .privacy-float b{display:block;font-size:.9rem}.privacy-float span{font-size:.78rem;color:var(--muted)}
+    .lock{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:10px;background:#8b5cf633;margin-bottom:8px}
+    .trustbar{border-block:1px solid var(--line);padding:21px 0;color:#c7bfd6}
+    .trustinner{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    .trustinner span{font-size:.88rem}.trustinner b{color:white}
+    section{padding:88px 0}
+    .sectiontop{max-width:700px;margin-bottom:38px}
+    .kicker{color:var(--purple2);font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.13em}
+    h2{font-size:clamp(2.1rem,4vw,3.5rem);line-height:1.08;letter-spacing:-.055em;margin:12px 0}
+    .sectiontop p{color:var(--muted);font-size:1.05rem}
+    .featuregrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .feature{padding:25px;border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(150deg,#211a35,#171326);min-height:220px;transition:.22s}
+    .feature:hover{transform:translateY(-5px);border-color:#a78bfa77}
+    .icon{width:43px;height:43px;border-radius:14px;background:#8b5cf629;display:grid;place-items:center;font-size:21px;margin-bottom:19px}
+    .feature h3{margin:0 0 8px;font-size:1.12rem}.feature p{margin:0;color:var(--muted);font-size:.92rem}
+    .privacy{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;background:linear-gradient(120deg,#241a3d,#171326);border:1px solid #a78bfa44;border-radius:32px;padding:48px}
+    .privacy h2{font-size:clamp(2rem,4vw,3.2rem)}
+    .privacy p{color:var(--muted)}
+    .privacylist{display:grid;gap:13px}
+    .privacyitem{display:flex;gap:13px;align-items:flex-start;padding:15px;border:1px solid var(--line);border-radius:16px;background:#ffffff06}
+    .check{color:var(--mint);font-size:1.15rem}.privacyitem b{display:block}.privacyitem small{color:var(--muted)}
+    .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;counter-reset:step}
+    .step{padding:25px 5px;border-top:1px solid #ffffff30}
+    .step:before{counter-increment:step;content:"0" counter(step);color:var(--purple2);font-weight:850;font-size:.85rem}
+    .step h3{margin:13px 0 7px}.step p{margin:0;color:var(--muted);font-size:.92rem}
+    .cta{padding:60px 35px;text-align:center;border-radius:32px;background:radial-gradient(circle at 50% 0%,#a78bfa55,transparent 55%),linear-gradient(130deg,#322052,#201631);border:1px solid #c4b5fd44}
+    .cta p{color:#d1c9df;max-width:570px;margin:12px auto 25px}
+    footer{padding:35px 0 45px;border-top:1px solid var(--line);color:#948ba7;font-size:.85rem}
+    .foot{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    .foot strong{color:white}
+    @media(max-width:850px){.hero{grid-template-columns:1fr;padding-top:55px;gap:15px}.visual{min-height:460px}.featuregrid{grid-template-columns:repeat(2,1fr)}.privacy{grid-template-columns:1fr;padding:32px}.navlinks{display:none}}
+    @media(max-width:560px){.wrap{width:min(100% - 28px,1160px)}.nav{height:70px}.nav>.pillbtn{padding:10px 13px;font-size:.82rem}.hero{padding:48px 0 45px}h1{font-size:3.35rem}.lead{font-size:1rem}.visual{min-height:420px}.phone{width:270px}.screen{min-height:400px}.privacy-float{right:-3px;bottom:25px;width:185px}section{padding:65px 0}.featuregrid,.steps{grid-template-columns:1fr}.feature{min-height:0}.privacy{padding:25px 20px}.cta{padding:45px 20px}.trustinner{display:grid;grid-template-columns:1fr 1fr}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
+  </style>
 </head>
 <body>
-  <h1>uranime</h1>
-  <p>Your personal anime companion.</p>
-  <p>Track anime, write reviews, and preserve your anime journey.</p>
+  <header class="wrap nav">
+    <a class="brand" href="#" aria-label="urAnime home"><span class="mark">う</span><span>urAnime</span></a>
+    <nav class="navlinks" aria-label="Main navigation">
+      <a href="#features">Features</a><a href="#privacy">Your privacy</a><a href="#how">How it works</a>
+    </nav>
+    <a class="pillbtn" href="#features">Explore urAnime <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main>
+    <div class="wrap hero">
+      <div>
+        <div class="eyebrow"><span class="dot"></span> Made for anime people</div>
+        <h1>Your anime life.<br><span>Your kind of people.</span></h1>
+        <p class="lead">“What are you watching?” turns into a two-hour conversation. Keep every series, episode, rating and thought in one place—and share your anime world with friends when you're ready.</p>
+        <div class="actions">
+          <a class="pillbtn" href="#features">Find your next obsession <span aria-hidden="true">→</span></a>
+          <a class="pillbtn ghost" href="#privacy">See how privacy works</a>
+        </div>
+        <div class="smallnote">Discover more. Keep track. Make your anime journey yours.</div>
+      </div>
+      <div class="visual" aria-label="Illustration of the urAnime app">
+        <div class="glow"></div>
+        <div class="phone">
+          <div class="screen">
+            <div class="screenhead"><span>urAnime</span><span class="avatar">✦</span></div>
+            <div class="mini-label">Your anime corner</div>
+            <div class="animecard"><strong>Your next favourite?</strong><small>Discover something unforgettable.</small></div>
+            <div class="mini-label">Your journey, in progress</div>
+            <div class="statrow">
+              <div class="stat"><b>01</b><span>Currently watching</span></div>
+              <div class="stat"><b>∞</b><span>Stories to discover</span></div>
+            </div>
+            <div class="mini-label">A little note to self</div>
+            <div class="stat"><span>That episode. That plot twist. Still thinking about it…</span></div>
+          </div>
+        </div>
+        <div class="privacy-float"><span class="lock">🔒</span><b>Your space. Your call.</b><span>Private by default. Share with chosen friends, on your terms.</span></div>
+      </div>
+    </div>
+
+    <div class="trustbar">
+      <div class="wrap trustinner">
+        <span>✦ <b>Discover</b> your next favourite</span>
+        <span>◷ <b>Track</b> every episode</span>
+        <span>♡ <b>Remember</b> every feeling</span>
+        <span>⌑ <b>Share</b> only when you choose</span>
+      </div>
+    </div>
+
+    <section id="features" class="wrap">
+      <div class="sectiontop">
+        <div class="kicker">More than a watchlist</div>
+        <h2>For every “just one more episode.”</h2>
+        <p>From the first recommendation to the finale you can't stop thinking about, urAnime keeps your anime journey together.</p>
+      </div>
+      <div class="featuregrid">
+        <article class="feature"><div class="icon">✧</div><h3>Find your next favourite</h3><p>Explore anime, search for titles and dive into detailed anime information.</p></article>
+        <article class="feature"><div class="icon">▣</div><h3>Your personal library</h3><p>Keep the anime you love in one place and organise what you're watching, planning and finishing.</p></article>
+        <article class="feature"><div class="icon">◷</div><h3>Stay in the story</h3><p>Follow episode information, keep your watch progress up to date and get upcoming episode reminders.</p></article>
+        <article class="feature"><div class="icon">♡</div><h3>Keep your anime journal</h3><p>Save your thoughts, ratings and memories. The moments, reactions and plot twists are yours to keep.</p></article>
+        <article class="feature"><div class="icon">⤢</div><h3>Connect your anime services</h3><p>Connect supported external anime services and manage your tracker connections.</p></article>
+        <article class="feature"><div class="icon">☻</div><h3>Make it yours</h3><p>Manage your profile and shape a personal space around the anime you enjoy.</p></article>
+      </div>
+    </section>
+
+    <section id="privacy" class="wrap">
+      <div class="privacy">
+        <div>
+          <div class="kicker">Your space, your rules</div>
+          <h2>Your anime life isn't public property.</h2>
+          <p>Your library, journal and personal activity are for you. Keep your space private, then choose what to share and who gets access. No pressure to put your whole anime life on display.</p>
+          <a class="pillbtn" href="#how">How sharing works <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="privacylist">
+          <div class="privacyitem"><span class="check">✓</span><div><b>Private until you share</b><small>Your personal anime space isn't automatically a public feed.</small></div></div>
+          <div class="privacyitem"><span class="check">✓</span><div><b>Choose your circle</b><small>Share with the friends you choose—not everyone by default.</small></div></div>
+          <div class="privacyitem"><span class="check">✓</span><div><b>Control access</b><small>Decide what you share and manage who can see it.</small></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="how" class="wrap">
+      <div class="sectiontop">
+        <div class="kicker">Your journey starts here</div>
+        <h2>Watch it. Log it. Talk about it.</h2>
+        <p>Make urAnime your home base for everything you love about anime.</p>
+      </div>
+      <div class="steps">
+        <article class="step"><h3>Discover</h3><p>Find a new series, explore the details and follow the stories everyone is talking about.</p></article>
+        <article class="step"><h3>Make it yours</h3><p>Add anime to your library, track episodes, rate what you watch and write down your thoughts.</p></article>
+        <article class="step"><h3>Share your way</h3><p>Bring chosen friends into the conversation by sharing what you want, with access you control.</p></article>
+      </div>
+    </section>
+
+    <section class="wrap">
+      <div class="cta">
+        <div class="kicker">Your next anime conversation starts here</div>
+        <h2>So… what are you watching?</h2>
+        <p>Find your next favourite, keep track of every episode and save the moments worth talking about. Your anime journey, all in one place.</p>
+        <a class="pillbtn" href="#features">Get to know urAnime <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap foot">
+      <div><strong>urAnime</strong> · Your personal anime companion.</div>
+      <div><a href="/privacy-policy">Privacy Policy</a> &nbsp;·&nbsp; Made for the love of anime ✦</div>
+    </div>
+  </footer>
 </body>
 </html>
